@@ -1,57 +1,140 @@
-let nav = document.getElementById("navbar");
-let notLoadAll = document.querySelectorAll(".notload")
-let navs = document.getElementById("navs");
-let display = false;
-let loading = document.getElementById("loading")
-let body = document.getElementById("body")
-let e = document.getElementById("navbar-toggler");
+const button =
+    document.getElementById("openBtn");
 
-window.onload = () => {
-	setTimeout(function() {
-		for (let i = 0; i < notLoadAll.length; i++) {
-			if (typeof notLoadAll[i].attributes["notload-delay"] !== "object") {
-				notLoadAll[i].classList.remove("notload")
-			} else if (typeof notLoadAll[i].attributes["notload-delay"] == "object") {
-				setTimeout(() => {
-					notLoadAll[i].classList.remove("notload")
-				}, 500)
-			}
-		}
-		loading.classList.add("off")
-		setTimeout(function() {
-			loading.classList.add("transparent")
-			setTimeout(function() {
-				loading.style.display = "none"
-			}, 1000);
-		}, 100);
-	}, 1000);
+const opening =
+    document.getElementById("opening");
+
+const couple =
+    document.getElementById("couple");
+
+
+button.addEventListener("click", function () {
+
+    /*
+        1. Jalankan animasi opening
+    */
+
+    opening.classList.add("opened");
+
+    button.disabled = true;
+
+
+    /*
+        2. Setelah opening selesai,
+           munculkan biodata
+    */
+
+    setTimeout(function () {
+
+        couple.classList.add("show");
+
+
+        /*
+            Aktifkan scroll
+        */
+
+        document.body.style.overflow = "auto";
+
+
+        /*
+            Scroll otomatis menuju biodata
+        */
+
+        couple.scrollIntoView({
+
+            behavior: "smooth",
+
+            block: "start"
+
+        });
+
+    }, 1000);
+
+});
+// =========================
+// SCROLL REVEAL
+// =========================
+
+const revealElements = document.querySelectorAll('.scroll-reveal');
+
+const revealObserver = new IntersectionObserver(
+    (entries) => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+                // Munculkan ketika masuk layar
+                entry.target.classList.add('show');
+
+            } else {
+
+                // Hilangkan ketika keluar layar
+                entry.target.classList.remove('show');
+
+            }
+
+        });
+
+    },
+    {
+        threshold: 0.15
+    }
+);
+
+revealElements.forEach(element => {
+    revealObserver.observe(element);
+});
+// =========================
+// GALLERY BUTTON SLIDER
+// =========================
+
+const galleryWrapper = document.getElementById('galleryWrapper');
+const galleryTrack = document.querySelector('.gallery-track');
+
+const galleryPrev = document.getElementById('galleryPrev');
+const galleryNext = document.getElementById('galleryNext');
+
+let galleryPosition = 0;
+
+const galleryItem = document.querySelector('.gallery-item');
+
+const galleryGap = 20;
+
+function moveGallery(direction) {
+
+    const itemWidth = galleryItem.offsetWidth + galleryGap;
+
+    galleryPosition += direction * itemWidth;
+
+    const maxScroll =
+        galleryTrack.scrollWidth - galleryWrapper.clientWidth;
+
+    if (galleryPosition < 0) {
+        galleryPosition = 0;
+    }
+
+    if (galleryPosition > maxScroll) {
+        galleryPosition = maxScroll;
+    }
+
+    galleryTrack.style.transform =
+        `translateX(-${galleryPosition}px)`;
+
 }
 
 
-function toggleNavbar() {
-	if (document.documentElement.clientWidth >= 922) return;
+// Tombol kiri
+galleryPrev.addEventListener('click', () => {
 
-	if (display) {
-		e.classList.remove("fa-times");
-		e.classList.add("fa-bars");
-		navs.classList.remove("on")
-		body.classList.remove("navbaractive")
-		display = false;
-	} else if (!display) {
-		e.classList.add("fa-times");
-		e.classList.remove("fa-bars");
-		navs.classList.add("on")
-		body.classList.add("navbaractive")
-		display = true;
-	}
-}
+    moveGallery(-1);
 
-function toggleDmIG() {
-	let icon = document.getElementById("showme");
-	if (!icon) return;
+});
 
-	icon.classList.add("arrow");
-	setTimeout(() => {
-		icon.classList.remove("arrow")
-	}, 500)
-}
+
+// Tombol kanan
+galleryNext.addEventListener('click', () => {
+
+    moveGallery(1);
+
+});
