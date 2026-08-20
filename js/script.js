@@ -7,9 +7,19 @@ const opening =
 const couple =
     document.getElementById("couple");
 
+const backgroundMusic =
+    document.getElementById("backgroundMusic");
+
 
 button.addEventListener("click", function () {
 
+    /*
+        1. Jalankan musik
+    */
+
+    backgroundMusic.volume = 0.5;
+    backgroundMusic.play();
+    
     /*
         1. Jalankan animasi opening
     */
